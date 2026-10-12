@@ -130,6 +130,24 @@ All MadnessFeed settings, with their defaults and descriptions, are listed in
 | `QUARKUS_HTTP_AUTH_FORM_COOKIE_SAME_SITE`      | Set to `none` to stay logged in when MadnessFeed is shown in an iframe of a dashboard on another domain or IP address (e.g. Homarr). See [Showing MadnessFeed inside a dashboard](#showing-madnessfeed-inside-a-dashboard-homarr-organizr-). |
 | `MADNESSFEED_USERS_ALLOW_REGISTRATIONS`          | Whether visitors can create their own account (`false` by default).                                                                       |
 | `MADNESSFEED_HTTP_CLIENT_BLOCK_LOCAL_ADDRESSES`  | Set to `false` to follow feeds hosted on your local network. See the [FAQ](#getting-access-to-local-address-blocked-when-adding-a-feed). |
+| `MADNESSFEED_FEED_REFRESH_INTERVAL`             | Shortest time between two refreshes of a feed (`5m` by default). See [How often feeds are refreshed](#how-often-feeds-are-refreshed). |
+| `MADNESSFEED_FEED_REFRESH_MAX_INTERVAL`         | Longest time between two refreshes of a feed (`4h` by default).                                                                          |
+| `MADNESSFEED_FEED_REFRESH_INTERVAL_EMPIRICAL`   | Set to `false` to refresh every feed at exactly `MADNESSFEED_FEED_REFRESH_INTERVAL` instead of adapting to how often it posts.            |
+
+### How often feeds are refreshed
+
+By default, each feed is refreshed somewhere between 5 minutes and 4 hours after the previous refresh: feeds that post
+often are checked often, feeds that rarely post are checked rarely. The bounds are `MADNESSFEED_FEED_REFRESH_INTERVAL`
+and `MADNESSFEED_FEED_REFRESH_MAX_INTERVAL`, written as durations such as `30s`, `15m` or `2h`. To refresh every feed at
+a fixed interval, for example every 15 minutes:
+
+```
+--env MADNESSFEED_FEED_REFRESH_INTERVAL=15m \
+--env MADNESSFEED_FEED_REFRESH_INTERVAL_EMPIRICAL=false
+```
+
+A feed can still be refreshed less often when it asks for it (`Cache-Control` or `Retry-After` headers) or keeps
+failing. The **Fetch all my feeds now** action refreshes everything immediately.
 
 ### Using another database
 
