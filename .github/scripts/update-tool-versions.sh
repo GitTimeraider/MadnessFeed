@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Bumps the versions Dependabot can't see (plain Maven properties, a curl download in the Dockerfile and the Maven
-# wrapper) to their latest releases. Run from the repository root; it only edits files, committing and opening the
-# pull request is left to .github/workflows/update-tool-versions.yml.
+# Bumps the versions Dependabot can't see (plain Maven properties, npm overrides, a curl download in the Dockerfile and
+# the Maven wrapper) to their latest releases. Run from the repository root; it only edits files, committing and
+# opening the pull request is left to .github/workflows/update-tool-versions.yml.
 # Each update is appended as a markdown list item to the file named by $CHANGES_FILE (default: /dev/null).
 set -euo pipefail
 
 CHANGES_FILE="${CHANGES_FILE:-/dev/null}"
 
 CLIENT_POM="madnessfeed-client/pom.xml"
+CLIENT_PACKAGE_JSON="madnessfeed-client/package.json"
 SERVER_POM="madnessfeed-server/pom.xml"
 DOCKERFILE="madnessfeed-server/src/main/docker/Dockerfile.native"
 WRAPPER_PROPERTIES=".mvn/wrapper/maven-wrapper.properties"
@@ -49,6 +50,28 @@ latest=$(curl -fsSL https://registry.npmjs.org/npm/latest | jq -r .version)
 if is_newer "$current" "$latest"; then
 	record "npm" "$current" "$latest"
 	sed -i "s|<npm.version>$current</npm.version>|<npm.version>$latest</npm.version>|" "$CLIENT_POM"
+fi
+
+# Client packages forced to a version with "overrides" in package.json, usually to get a security fix that the package
+# depending on them hasn't picked up yet (dompurify for monaco-editor). Dependabot doesn't update overrides, so each
+# "^x.y.z" one is raised to the latest release of the same major version, and the lockfile is refreshed with the npm
+# version of the client build.
+overrides_changed=false
+for name in $(jq -r '.overrides | to_entries[] | select(.value | type == "string" and test("^\\^[0-9]+\\.[0-9]+\\.[0-9]+$")) | .key' "$CLIENT_PACKAGE_JSON"); do
+	current=$(jq -r --arg name "$name" '.overrides[$name] | ltrimstr("^")' "$CLIENT_PACKAGE_JSON")
+	latest=$(curl -fsSL "https://registry.npmjs.org/${name/\//%2F}" |
+		jq -r --arg major "${current%%.*}" '.versions | keys[] | select(test("^" + $major + "\\.[0-9]+\\.[0-9]+$"))' |
+		sort -V | tail -n1)
+	if is_newer "$current" "$latest"; then
+		record "$name (npm override)" "$current" "$latest"
+		sed -i "s|\"$name\": \"^$current\"|\"$name\": \"^$latest\"|" "$CLIENT_PACKAGE_JSON"
+		overrides_changed=true
+	fi
+done
+if [ "$overrides_changed" = true ]; then
+	npm_version=$(pom_property "$CLIENT_POM" npm.version)
+	(cd "$(dirname "$CLIENT_PACKAGE_JSON")" &&
+		npx --yes "npm@$npm_version" install --package-lock-only --ignore-scripts --no-audit --no-fund)
 fi
 
 # google-java-format used by the spotless plugin: latest stable release. Spotless calls google-java-format through
