@@ -16,8 +16,8 @@
         <quarkus.version>3.40.1.1</quarkus.version>
         <querydsl.version>7.7</querydsl.version>
         <rome.version>2.1.0</rome.version>
-        <jackson2.version>2.22.3</jackson2.version>
-        <jackson3.version>3.2.3</jackson3.version>
+        <jackson2.version>2.22.4</jackson2.version>
+        <jackson3.version>3.2.4</jackson3.version>
         <!-- kept up to date by .github/workflows/update-tool-versions.yml -->
         <google-java-format.version>1.36.1</google-java-format.version>
 
@@ -186,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.1</version>
                 <configuration>
                     <argLine>@{argLine}</argLine>
                     <systemPropertyVariables>
@@ -198,7 +198,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -504,7 +504,7 @@
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-junit-jupiter</artifactId>
-            <version>9.0.0</version>
+            <version>9.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
