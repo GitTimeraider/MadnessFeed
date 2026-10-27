@@ -3,9 +3,10 @@ permissions:
   contents: read
 
 # Complements Dependabot (.github/dependabot.yml) for the versions it can't see: Node.js and npm used by the client
-# build, google-java-format, the Maven wrapper and gosu in the Docker image. Runs weekly on Monday like Dependabot and
-# opens (or refreshes) a single pull request from the automated/tool-versions branch. Run it manually from the
-# Actions tab: "Update tool versions" → "Run workflow". Like Dependabot's, the pull request targets the develop branch.
+# build, the client's npm overrides (such as dompurify, pinned by monaco-editor), google-java-format, the Maven wrapper
+# and gosu in the Docker image. Runs weekly on Monday like Dependabot and opens (or refreshes) a single pull request
+# from the automated/tool-versions branch. Run it manually from the Actions tab: "Update tool versions" → "Run
+# workflow". Like Dependabot's, the pull request targets the develop branch.
 on:
   schedule:
     - cron: "17 5 * * 1"
@@ -41,6 +42,13 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: "graalvm"
           cache: "maven"
+
+      # The script refreshes the client lockfile with the npm version of the client build, which needs a newer
+      # Node.js than the runner may have.
+      - name: Set up NodeJS
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "lts/*"
 
       - name: Update versions
         env:
