@@ -6,7 +6,7 @@
 Based on CommaFeed https://github.com/Athou/commafeed
 
 #### Disclaimer: 
-While guided and checked, AI is responsible for half of the coding. Development is also 100% for own personal use, no promises.
+While guided and checked, AI is responsible for half of the coding. Development is also 100% for own personal use. If you want personal changes, please fork or copy it for your own use/development.
 __________________________________
 
 Additional features compared to original (Might not be fully up-to-date)
