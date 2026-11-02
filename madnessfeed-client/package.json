@@ -80,6 +80,13 @@
     },
     "overrides": {
         "dompurify": "^3.4.17",
+        "follow-redirects": "^1.16.2",
+        "@lingui/vite-plugin": {
+            "@rolldown/plugin-babel": "$@rolldown/plugin-babel"
+        },
+        "@vitejs/plugin-react": {
+            "@rolldown/plugin-babel": "$@rolldown/plugin-babel"
+        },
         "react-infinite-scroller": {
             "react": "$react"
         }
