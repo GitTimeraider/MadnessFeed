@@ -99,19 +99,19 @@ class PushNotificationServiceTest {
                                 .withBody(
                                         JsonBody.json(
                                                 """
-						{
-							"title": "Test Feed",
-							"message": "Test Entry",
-							"priority": 5,
-							"extras": {
-								"client::notification": {
-									"click": {
-										"url": "http://example.com/entry"
-									}
-								}
-							}
-						}
-						""")))
+                                                {
+                                                	"title": "Test Feed",
+                                                	"message": "Test Entry",
+                                                	"priority": 5,
+                                                	"extras": {
+                                                		"client::notification": {
+                                                			"click": {
+                                                				"url": "http://example.com/entry"
+                                                			}
+                                                		}
+                                                	}
+                                                }
+                                                """)))
                 .respond(HttpResponse.response().withStatusCode(200));
 
         Assertions.assertDoesNotThrow(

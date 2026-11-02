@@ -166,11 +166,10 @@ public class TestAuthenticator {
             }
             case Map<?, ?> map -> {
                 header(out, 5, map.size());
-                map.forEach(
-                        (k, v) -> {
-                            write(out, k);
-                            write(out, v);
-                        });
+                map.forEach((k, v) -> {
+                    write(out, k);
+                    write(out, v);
+                });
             }
             default -> throw new IllegalArgumentException("unsupported type " + value);
         }

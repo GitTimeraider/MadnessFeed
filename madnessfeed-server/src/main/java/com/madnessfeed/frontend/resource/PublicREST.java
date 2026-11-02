@@ -242,11 +242,9 @@ public class PublicREST {
                 .forEach(result.getChildren()::add);
 
         content.publicSubscriptions().stream()
-                .filter(
-                        s ->
-                                Objects.equals(
-                                        s.getCategory() == null ? null : s.getCategory().getId(),
-                                        id))
+                .filter(s ->
+                        Objects.equals(
+                                s.getCategory() == null ? null : s.getCategory().getId(), id))
                 .sorted(SUBSCRIPTION_COMPARATOR)
                 .map(s -> buildSubscription(page, s))
                 .forEach(result.getFeeds()::add);
