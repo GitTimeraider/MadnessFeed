@@ -19,7 +19,7 @@
         <jackson2.version>2.22.4</jackson2.version>
         <jackson3.version>3.2.4</jackson3.version>
         <!-- kept up to date by .github/workflows/update-tool-versions.yml -->
-        <google-java-format.version>1.36.1</google-java-format.version>
+        <google-java-format.version>2.0.0</google-java-format.version>
 
         <build.database>h2</build.database>
     </properties>

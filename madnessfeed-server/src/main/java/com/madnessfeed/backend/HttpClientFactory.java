@@ -66,11 +66,10 @@ public class HttpClientFactory {
         String userAgent =
                 config.httpClient()
                         .userAgent()
-                        .orElseGet(
-                                () ->
-                                        String.format(
-                                                "MadnessFeed/%s (https://github.com/GitTimeraider/MadnessFeed)",
-                                                version.getVersion()));
+                        .orElseGet(() ->
+                                String.format(
+                                        "MadnessFeed/%s (https://github.com/GitTimeraider/MadnessFeed)",
+                                        version.getVersion()));
         return newClient(config, connectionManager, userAgent);
     }
 

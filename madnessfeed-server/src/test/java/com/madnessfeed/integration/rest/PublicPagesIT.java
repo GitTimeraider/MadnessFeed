@@ -246,16 +246,15 @@ class PublicPagesIT extends BaseIT {
         String legacyToken = PublicPageService.generateToken();
 
         // settings of the single public page stored before multiple pages were supported
-        unitOfWork.run(
-                () -> {
-                    User user = userDAO.findByName(TestConstants.ADMIN_USERNAME);
-                    user.setPublicPageEnabled(true);
-                    user.setPublicPageUncategorized(true);
-                    user.setPublicPageToken(legacyToken);
-                    feedCategoryDAO.findAll(user).stream()
-                            .filter(c -> c.getId().equals(Long.valueOf(shown)))
-                            .forEach(c -> c.setPublicCategory(true));
-                });
+        unitOfWork.run(() -> {
+            User user = userDAO.findByName(TestConstants.ADMIN_USERNAME);
+            user.setPublicPageEnabled(true);
+            user.setPublicPageUncategorized(true);
+            user.setPublicPageToken(legacyToken);
+            feedCategoryDAO.findAll(user).stream()
+                    .filter(c -> c.getId().equals(Long.valueOf(shown)))
+                    .forEach(c -> c.setPublicCategory(true));
+        });
 
         unitOfWork.run(publicPageService::migrateLegacyPublicPages);
 
@@ -275,15 +274,13 @@ class PublicPagesIT extends BaseIT {
                         .toList());
 
         // the legacy settings are cleared so that the migration only happens once
-        unitOfWork.run(
-                () -> {
-                    User user = userDAO.findByName(TestConstants.ADMIN_USERNAME);
-                    Assertions.assertNull(user.getPublicPageToken());
-                    Assertions.assertFalse(user.isPublicPageEnabled());
-                    Assertions.assertTrue(
-                            feedCategoryDAO.findAll(user).stream()
-                                    .noneMatch(c -> c.isPublicCategory()));
-                });
+        unitOfWork.run(() -> {
+            User user = userDAO.findByName(TestConstants.ADMIN_USERNAME);
+            Assertions.assertNull(user.getPublicPageToken());
+            Assertions.assertFalse(user.isPublicPageEnabled());
+            Assertions.assertTrue(
+                    feedCategoryDAO.findAll(user).stream().noneMatch(c -> c.isPublicCategory()));
+        });
         unitOfWork.run(publicPageService::migrateLegacyPublicPages);
         Assertions.assertEquals(1, getPublicPages().size());
     }

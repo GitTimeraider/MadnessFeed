@@ -214,10 +214,9 @@ public class MfaREST {
     private User login(MfaLoginRequest request) {
         return userService
                 .login(request.getName(), request.getPassword())
-                .orElseThrow(
-                        () ->
-                                new MadnessFeedApplicationException(
-                                        MadnessFeedExceptionType.WRONG_USERNAME_OR_PASSWORD));
+                .orElseThrow(() ->
+                        new MadnessFeedApplicationException(
+                                MadnessFeedExceptionType.WRONG_USERNAME_OR_PASSWORD));
     }
 
     private User getModifiableUser() {

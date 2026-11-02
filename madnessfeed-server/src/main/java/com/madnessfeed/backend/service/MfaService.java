@@ -208,11 +208,10 @@ public class MfaService {
                 userPasskeyDAO.findAll(user).stream()
                         .filter(p -> Objects.equals(p.getId(), passkeyId))
                         .findFirst();
-        passkey.ifPresent(
-                p -> {
-                    userPasskeyDAO.delete(p);
-                    log.info("passkey '{}' deleted for user {}", p.getName(), user.getName());
-                });
+        passkey.ifPresent(p -> {
+            userPasskeyDAO.delete(p);
+            log.info("passkey '{}' deleted for user {}", p.getName(), user.getName());
+        });
         return passkey.isPresent();
     }
 

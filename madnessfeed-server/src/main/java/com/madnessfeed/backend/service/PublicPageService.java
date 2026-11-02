@@ -118,12 +118,10 @@ public class PublicPageService {
 
         List<FeedSubscription> publicSubscriptions =
                 feedSubscriptionDAO.findAll(user).stream()
-                        .filter(
-                                s ->
-                                        s.getCategory() == null
-                                                ? page.isShowUncategorized()
-                                                : publicCategoryIds.contains(
-                                                        s.getCategory().getId()))
+                        .filter(s ->
+                                s.getCategory() == null
+                                        ? page.isShowUncategorized()
+                                        : publicCategoryIds.contains(s.getCategory().getId()))
                         .toList();
 
         return new PublicContent(
@@ -170,11 +168,10 @@ public class PublicPageService {
          */
         public List<FeedSubscription> getPublicSubscriptions(FeedCategory category) {
             return publicSubscriptions.stream()
-                    .filter(
-                            s ->
-                                    s.getCategory() != null
-                                            && isSameOrDescendant(
-                                                    s.getCategory().getId(), category.getId()))
+                    .filter(s ->
+                            s.getCategory() != null
+                                    && isSameOrDescendant(
+                                            s.getCategory().getId(), category.getId()))
                     .toList();
         }
 
