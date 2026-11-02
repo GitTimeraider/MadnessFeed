@@ -421,7 +421,7 @@
         <dependency>
             <groupId>dev.cel</groupId>
             <artifactId>cel</artifactId>
-            <version>0.14.0</version>
+            <version>0.15.0</version>
         </dependency>
         <dependency>
             <groupId>org.passay</groupId>
@@ -504,7 +504,7 @@
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-junit-jupiter</artifactId>
-            <version>9.1.0</version>
+            <version>9.2.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
