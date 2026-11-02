@@ -52,28 +52,25 @@ public class DatabaseUsernamePasswordIdentityProvider
     @Override
     public Uni<SecurityIdentity> authenticate(
             UsernamePasswordAuthenticationRequest request, AuthenticationRequestContext context) {
-        return context.runBlocking(
-                () -> {
-                    Optional<User> user =
-                            unitOfWork.call(
-                                    () ->
-                                            userService.login(
-                                                    request.getUsername(),
-                                                    new String(
-                                                            request.getPassword().getPassword())));
-                    if (user.isEmpty()) {
-                        throw new MadnessFeedApplicationException(
-                                MadnessFeedExceptionType.WRONG_USERNAME_OR_PASSWORD);
-                    }
+        return context.runBlocking(() -> {
+            Optional<User> user =
+                    unitOfWork.call(() ->
+                            userService.login(
+                                    request.getUsername(),
+                                    new String(request.getPassword().getPassword())));
+            if (user.isEmpty()) {
+                throw new MadnessFeedApplicationException(
+                        MadnessFeedExceptionType.WRONG_USERNAME_OR_PASSWORD);
+            }
 
-                    verifySecondFactor(request, user.get());
+            verifySecondFactor(request, user.get());
 
-                    Set<Role> roles = unitOfWork.call(() -> userService.getRoles(user.get()));
-                    return QuarkusSecurityIdentity.builder()
-                            .setPrincipal(new QuarkusPrincipal(String.valueOf(user.get().getId())))
-                            .addRoles(roles.stream().map(Enum::name).collect(Collectors.toSet()))
-                            .build();
-                });
+            Set<Role> roles = unitOfWork.call(() -> userService.getRoles(user.get()));
+            return QuarkusSecurityIdentity.builder()
+                    .setPrincipal(new QuarkusPrincipal(String.valueOf(user.get().getId())))
+                    .addRoles(roles.stream().map(Enum::name).collect(Collectors.toSet()))
+                    .build();
+        });
     }
 
     /**
@@ -97,13 +94,12 @@ public class DatabaseUsernamePasswordIdentityProvider
 
         MultiMap form = context.request().formAttributes();
         MfaService.LoginResult result =
-                unitOfWork.call(
-                        () ->
-                                mfaService.verifyLogin(
-                                        userDAO.findById(user.getId()),
-                                        form.get(FORM_MFA_TOTP),
-                                        form.get(FORM_MFA_PASSKEY),
-                                        form.get(FORM_MFA_RESET_CODE)));
+                unitOfWork.call(() ->
+                        mfaService.verifyLogin(
+                                userDAO.findById(user.getId()),
+                                form.get(FORM_MFA_TOTP),
+                                form.get(FORM_MFA_PASSKEY),
+                                form.get(FORM_MFA_RESET_CODE)));
         switch (result) {
             case SUCCESS -> {
                 // second factor verified

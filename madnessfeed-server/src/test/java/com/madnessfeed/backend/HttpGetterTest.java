@@ -313,18 +313,17 @@ class HttpGetterTest {
 
         this.mockServerClient
                 .when(HttpRequest.request().withMethod("GET"))
-                .respond(
-                        req -> {
-                            calls.incrementAndGet();
+                .respond(req -> {
+                    calls.incrementAndGet();
 
-                            if (req.containsHeader(HttpHeaders.COOKIE)) {
-                                throw new Exception("cookie should not be sent by the client");
-                            }
+                    if (req.containsHeader(HttpHeaders.COOKIE)) {
+                        throw new Exception("cookie should not be sent by the client");
+                    }
 
-                            return HttpResponse.response()
-                                    .withBody("ok")
-                                    .withHeader(HttpHeaders.SET_COOKIE, "foo=bar");
-                        });
+                    return HttpResponse.response()
+                            .withBody("ok")
+                            .withHeader(HttpHeaders.SET_COOKIE, "foo=bar");
+                });
 
         Assertions.assertDoesNotThrow(() -> getter.get(this.feedUrl));
         Assertions.assertDoesNotThrow(() -> getter.get(this.feedUrl + "?foo=bar"));
@@ -337,11 +336,10 @@ class HttpGetterTest {
 
         this.mockServerClient
                 .when(HttpRequest.request().withMethod("GET"))
-                .respond(
-                        req -> {
-                            calls.incrementAndGet();
-                            return HttpResponse.response().withBody("ok");
-                        });
+                .respond(req -> {
+                    calls.incrementAndGet();
+                    return HttpResponse.response().withBody("ok");
+                });
 
         HttpResult result = getter.get(this.feedUrl);
         Assertions.assertEquals(result, getter.get(this.feedUrl));
@@ -396,17 +394,15 @@ class HttpGetterTest {
 
         this.mockServerClient
                 .when(HttpRequest.request().withMethod("GET"))
-                .respond(
-                        req -> {
-                            calls.incrementAndGet();
+                .respond(req -> {
+                    calls.incrementAndGet();
 
-                            if (req.containsHeader(HttpHeaders.UPGRADE)) {
-                                throw new Exception(
-                                        "upgrade header should not be sent by the client");
-                            }
+                    if (req.containsHeader(HttpHeaders.UPGRADE)) {
+                        throw new Exception("upgrade header should not be sent by the client");
+                    }
 
-                            return HttpResponse.response().withBody("ok");
-                        });
+                    return HttpResponse.response().withBody("ok");
+                });
 
         Assertions.assertDoesNotThrow(() -> getter.get(this.feedUrl));
         Assertions.assertEquals(1, calls.get());
@@ -434,27 +430,25 @@ class HttpGetterTest {
             HttpGetterTest.this
                     .mockServerClient
                     .when(HttpRequest.request().withMethod("GET"))
-                    .respond(
-                            req -> {
-                                String acceptEncodingHeader =
-                                        req.getFirstHeader(HttpHeaders.ACCEPT_ENCODING);
-                                if (!ACCEPT_ENCODING.equals(acceptEncodingHeader)) {
-                                    throw new Exception(
-                                            "Wrong value in the Accept-Encoding header, should be '%s' but was '%s'"
-                                                    .formatted(
-                                                            ACCEPT_ENCODING, acceptEncodingHeader));
-                                }
+                    .respond(req -> {
+                        String acceptEncodingHeader =
+                                req.getFirstHeader(HttpHeaders.ACCEPT_ENCODING);
+                        if (!ACCEPT_ENCODING.equals(acceptEncodingHeader)) {
+                            throw new Exception(
+                                    "Wrong value in the Accept-Encoding header, should be '%s' but was '%s'"
+                                            .formatted(ACCEPT_ENCODING, acceptEncodingHeader));
+                        }
 
-                                ByteArrayOutputStream output = new ByteArrayOutputStream();
-                                try (OutputStream compressionOutputStream =
-                                        compressionFunction.apply(output)) {
-                                    compressionOutputStream.write(body.getBytes());
-                                }
+                        ByteArrayOutputStream output = new ByteArrayOutputStream();
+                        try (OutputStream compressionOutputStream =
+                                compressionFunction.apply(output)) {
+                            compressionOutputStream.write(body.getBytes());
+                        }
 
-                                return HttpResponse.response()
-                                        .withBody(output.toByteArray())
-                                        .withHeader(HttpHeaders.CONTENT_ENCODING, encoding);
-                            });
+                        return HttpResponse.response()
+                                .withBody(output.toByteArray())
+                                .withHeader(HttpHeaders.CONTENT_ENCODING, encoding);
+                    });
 
             HttpResult result = getter.get(HttpGetterTest.this.feedUrl);
             Assertions.assertEquals(body, new String(result.content()));
