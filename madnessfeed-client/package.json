@@ -80,7 +80,7 @@
     },
     "overrides": {
         "dompurify": "^3.4.17",
-        "follow-redirects": "^1.16.2",
+        "follow-redirects": "^1.16.3",
         "@lingui/vite-plugin": {
             "@rolldown/plugin-babel": "$@rolldown/plugin-babel"
         },
