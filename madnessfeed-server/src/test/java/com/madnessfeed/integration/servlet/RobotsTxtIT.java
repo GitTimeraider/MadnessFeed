@@ -18,4 +18,14 @@ class RobotsTxtIT extends BaseIT {
                 .statusCode(200)
                 .body(CoreMatchers.is("User-agent: *\nDisallow: /"));
     }
+
+    @Test
+    void securityTxtNotServedByDefault() {
+        RestAssured.given().get(".well-known/security.txt").then().statusCode(404);
+    }
+
+    @Test
+    void appStillServed() {
+        RestAssured.given().get("/").then().statusCode(200);
+    }
 }

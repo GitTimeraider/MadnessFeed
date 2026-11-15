@@ -47,6 +47,21 @@ public interface MadnessFeedConfiguration {
     Optional<String> robotsTxtFile();
 
     /**
+     * Content of the security.txt file (RFC 9116) served at /.well-known/security.txt, to tell
+     * security researchers how to report vulnerabilities. Not served when empty. Use \n (a
+     * backslash followed by n) to separate lines when setting this as an environment variable, e.g.
+     * Contact: mailto:security@example.com\nExpires: 2027-12-31T23:00:00.000Z
+     */
+    Optional<String> securityTxt();
+
+    /**
+     * Path to a file whose content is served as security.txt. The file is read on every request, so
+     * changes apply without a restart. Takes precedence over security-txt. If the file can't be
+     * read, security-txt is used.
+     */
+    Optional<String> securityTxtFile();
+
+    /**
      * If enabled, images in feed entries will be proxied through the server instead of accessed
      * directly by the browser.
      *
