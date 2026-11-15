@@ -57,6 +57,13 @@ class NetworkAccessIT extends BaseIT {
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
 
+        // robots.txt and security.txt are reachable (404: security.txt is not configured)
+        from(EXTERNAL_IP).get("robots.txt").then().statusCode(HttpStatus.SC_OK);
+        from(EXTERNAL_IP)
+                .get(".well-known/security.txt")
+                .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+
         // everything else is refused
         from(EXTERNAL_IP)
                 .formParams(

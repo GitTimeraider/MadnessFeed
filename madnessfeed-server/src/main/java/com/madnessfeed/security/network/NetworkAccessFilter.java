@@ -34,6 +34,7 @@ public class NetworkAccessFilter {
                     "/favicon.svg",
                     "/manifest.json",
                     "/robots.txt",
+                    "/.well-known/security.txt",
                     "/rest/server/get");
     private static final Pattern PUBLIC_PATH_PATTERN =
             Pattern.compile("^/(assets/[^/]+|app-icon-\\d+\\.png|rest/public/.+)$");

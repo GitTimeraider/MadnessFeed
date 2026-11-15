@@ -134,6 +134,7 @@ All MadnessFeed settings, with their defaults and descriptions, are listed in
 | `MADNESSFEED_FEED_REFRESH_MAX_INTERVAL`         | Longest time between two refreshes of a feed (`4h` by default).                                                                          |
 | `MADNESSFEED_FEED_REFRESH_INTERVAL_EMPIRICAL`   | Set to `false` to refresh every feed at exactly `MADNESSFEED_FEED_REFRESH_INTERVAL` instead of adapting to how often it posts.            |
 | `MADNESSFEED_ROBOTS_TXT_FILE`                   | Path to your own robots.txt file. See [Customizing robots.txt](#customizing-robotstxt).                                                 |
+| `MADNESSFEED_SECURITY_TXT_FILE`                 | Path to a security.txt file, telling security researchers how to report vulnerabilities. See [security.txt](#securitytxt).               |
 
 ### How often feeds are refreshed
 
@@ -182,6 +183,38 @@ To serve your own, use one of these (the first one that is set wins):
 3. **Nothing**: the default above. Set `MADNESSFEED_HIDE_FROM_WEB_CRAWLERS=false` to serve no robots.txt at all.
 
 `/robots.txt` is always reachable, even from networks excluded by `MADNESSFEED_ALLOWED_NETWORKS`.
+
+### security.txt
+
+A [security.txt](https://securitytxt.org/) (RFC 9116) tells security researchers how to report vulnerabilities to you.
+MadnessFeed serves none by default. To serve one at `/.well-known/security.txt`, use one of these (the first one that
+is set wins):
+
+1. **A file**: put a `security.txt` in your data directory, e.g. `/path/to/madnessfeed/data/security.txt` on the host:
+
+   ```
+   Contact: mailto:security@example.com
+   Expires: 2027-12-31T23:00:00.000Z
+   Preferred-Languages: en
+   ```
+
+   and point MadnessFeed to it:
+
+   ```sh
+   --env MADNESSFEED_SECURITY_TXT_FILE=/madnessfeed/data/security.txt
+   ```
+
+   The file is read on every request, so edits apply immediately, without a restart.
+
+2. **The content itself**, with `\n` between lines:
+
+   ```sh
+   --env 'MADNESSFEED_SECURITY_TXT=Contact: mailto:security@example.com\nExpires: 2027-12-31T23:00:00.000Z'
+   ```
+
+`Contact` and `Expires` are required by the standard. Keep `Expires` less than a year in the future and update it
+before it passes. `/.well-known/security.txt` is always reachable, even from networks excluded by
+`MADNESSFEED_ALLOWED_NETWORKS`.
 
 ### Using another database
 
