@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add `madnessfeed.robots-txt-file` (`MADNESSFEED_ROBOTS_TXT_FILE`) and `madnessfeed.robots-txt`
+  (`MADNESSFEED_ROBOTS_TXT`) to serve a custom robots.txt instead of the default one that disallows every crawler.
 - Rename the application from CommaFeed to MadnessFeed: user interface, documentation, settings (`madnessfeed.*` /
   `MADNESSFEED_*`), Docker image (`ghcr.io/gittimeraider/madnessfeed`, data in `/madnessfeed/data`), Maven modules and
   Java packages (`com.madnessfeed`). The old `commafeed.*` / `COMMAFEED_*` settings, the old image name and the old
