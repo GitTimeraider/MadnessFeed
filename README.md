@@ -133,6 +133,7 @@ All MadnessFeed settings, with their defaults and descriptions, are listed in
 | `MADNESSFEED_FEED_REFRESH_INTERVAL`             | Shortest time between two refreshes of a feed (`5m` by default). See [How often feeds are refreshed](#how-often-feeds-are-refreshed). |
 | `MADNESSFEED_FEED_REFRESH_MAX_INTERVAL`         | Longest time between two refreshes of a feed (`4h` by default).                                                                          |
 | `MADNESSFEED_FEED_REFRESH_INTERVAL_EMPIRICAL`   | Set to `false` to refresh every feed at exactly `MADNESSFEED_FEED_REFRESH_INTERVAL` instead of adapting to how often it posts.            |
+| `MADNESSFEED_ROBOTS_TXT_FILE`                   | Path to your own robots.txt file. See [Customizing robots.txt](#customizing-robotstxt).                                                 |
 
 ### How often feeds are refreshed
 
@@ -148,6 +149,39 @@ a fixed interval, for example every 15 minutes:
 
 A feed can still be refreshed less often when it asks for it (`Cache-Control` or `Retry-After` headers) or keeps
 failing. The **Fetch all my feeds now** action refreshes everything immediately.
+
+### Customizing robots.txt
+
+By default, MadnessFeed serves a `/robots.txt` that asks every search engine and crawler to stay away:
+
+```
+User-agent: *
+Disallow: /
+```
+
+To serve your own, use one of these (the first one that is set wins):
+
+1. **A file** (easiest to edit): put a `robots.txt` in your data directory, e.g. `/path/to/madnessfeed/data/robots.txt`
+   on the host, and point MadnessFeed to it:
+
+   ```sh
+   --env MADNESSFEED_ROBOTS_TXT_FILE=/madnessfeed/data/robots.txt
+   ```
+
+   The file is read on every request, so edits apply immediately, without a restart. If it can't be read, MadnessFeed
+   logs a warning and falls back to the next option.
+
+2. **The content itself**, with `\n` between lines:
+
+   ```sh
+   --env 'MADNESSFEED_ROBOTS_TXT=User-agent: *\nDisallow: /\nAllow: /public/'
+   ```
+
+   In docker-compose, quote the value with single quotes so the `\n` is kept as is.
+
+3. **Nothing**: the default above. Set `MADNESSFEED_HIDE_FROM_WEB_CRAWLERS=false` to serve no robots.txt at all.
+
+`/robots.txt` is always reachable, even from networks excluded by `MADNESSFEED_ALLOWED_NETWORKS`.
 
 ### Using another database
 
