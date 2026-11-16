@@ -13,7 +13,7 @@
 
 	<properties>
 		<!-- Node.js LTS and npm are kept up to date by .github/workflows/update-tool-versions.yml -->
-		<node.version>v26.13.0</node.version>
+		<node.version>v26.13.1</node.version>
 		<npm.version>12.2.2</npm.version>
 	</properties>
 
@@ -109,7 +109,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>3.6.4</version>
+						<version>3.7.0</version>
 						<executions>
 							<execution>
 								<id>kill-biome</id>
