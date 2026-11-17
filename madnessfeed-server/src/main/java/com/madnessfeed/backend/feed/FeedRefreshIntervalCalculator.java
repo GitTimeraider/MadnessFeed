@@ -77,7 +77,8 @@ public class FeedRefreshIntervalCalculator {
             return now.plus(maxInterval.dividedBy(4));
         } else if (averageEntryInterval != null) {
             // use average time between entries to decide when to refresh next, divided by factor
-            int factor = 2;
+            // (a quarter of the average, so new entries are picked up faster)
+            int factor = 4;
             long millis =
                     Longs.constrainToRange(
                             averageEntryInterval / factor,

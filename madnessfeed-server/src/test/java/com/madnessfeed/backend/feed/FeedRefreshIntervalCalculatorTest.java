@@ -121,7 +121,7 @@ class FeedRefreshIntervalCalculatorTest {
                     Instant result =
                             calculator.onFetchSuccess(
                                     NOW.minus(Duration.ofDays(5)),
-                                    Duration.ofHours(4).toMillis(),
+                                    Duration.ofHours(8).toMillis(),
                                     Duration.ZERO);
                     Assertions.assertEquals(NOW.plus(Duration.ofHours(2)), result);
                 }
@@ -207,7 +207,7 @@ class FeedRefreshIntervalCalculatorTest {
                 void averageBetweenBounds() {
                     Instant result =
                             calculator.onFeedNotModified(
-                                    NOW.minus(Duration.ofDays(5)), Duration.ofHours(4).toMillis());
+                                    NOW.minus(Duration.ofDays(5)), Duration.ofHours(8).toMillis());
                     Assertions.assertEquals(NOW.plus(Duration.ofHours(2)), result);
                 }
 
