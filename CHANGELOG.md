@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Adaptive refresh (`madnessfeed.feed-refresh.interval-empirical`) now checks active feeds every quarter of their
+  average time between entries instead of every half, still between `madnessfeed.feed-refresh.interval` and a quarter
+  of `madnessfeed.feed-refresh.max-interval`.
 - Add `madnessfeed.robots-txt-file` (`MADNESSFEED_ROBOTS_TXT_FILE`) and `madnessfeed.robots-txt`
   (`MADNESSFEED_ROBOTS_TXT`) to serve a custom robots.txt instead of the default one that disallows every crawler.
 - Add `madnessfeed.security-txt-file` (`MADNESSFEED_SECURITY_TXT_FILE`) and `madnessfeed.security-txt`
