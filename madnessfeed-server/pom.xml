@@ -94,7 +94,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-help-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>initialize</phase>
@@ -497,7 +497,7 @@
         <dependency>
             <groupId>io.github.hakky54</groupId>
             <artifactId>ayza-for-apache5</artifactId>
-            <version>10.1.0</version>
+            <version>10.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.brotli</groupId>
@@ -519,13 +519,13 @@
         <dependency>
             <groupId>io.quarkiverse.playwright</groupId>
             <artifactId>quarkus-playwright</artifactId>
-            <version>2.4.0</version>
+            <version>2.5.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-junit-jupiter</artifactId>
-            <version>9.2.0</version>
+            <version>9.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
