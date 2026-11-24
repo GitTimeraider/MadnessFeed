@@ -97,9 +97,30 @@ public class FeedRefreshEngine {
     }
 
     public void start() {
+        capRefreshDatesToMaxInterval();
         createExecutors();
         startFeedProcessingLoop();
         startRefillLoop();
+    }
+
+    /**
+     * Refresh dates are stored in the database. When the maximum refresh interval is lowered, feeds
+     * that were scheduled with the previous value would otherwise keep waiting until that date.
+     * Bring them back within the configured maximum.
+     */
+    private void capRefreshDatesToMaxInterval() {
+        try {
+            Instant max = Instant.now().plus(config.feedRefresh().maxInterval());
+            long updated = unitOfWork.call(() -> feedDAO.capDisabledUntil(max));
+            if (updated > 0) {
+                log.info(
+                        "rescheduled {} feed(s) to be refreshed within the maximum refresh interval of {}",
+                        updated,
+                        config.feedRefresh().maxInterval());
+            }
+        } catch (Exception e) {
+            log.error("unable to apply the maximum refresh interval to scheduled feeds", e);
+        }
     }
 
     private void startFeedProcessingLoop() {

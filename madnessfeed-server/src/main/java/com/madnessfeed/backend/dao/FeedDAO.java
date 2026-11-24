@@ -51,6 +51,20 @@ public class FeedDAO extends GenericDAO<Feed> {
         updateQuery(FEED).set(FEED.disabledUntil, date).where(FEED.id.in(feedIds)).execute();
     }
 
+    /**
+     * Brings back the next refresh date of feeds scheduled after the given date. Used at startup so
+     * that a lowered maximum refresh interval applies to feeds scheduled with a previous, higher
+     * value.
+     *
+     * @return the number of updated feeds
+     */
+    public long capDisabledUntil(Instant max) {
+        return updateQuery(FEED)
+                .set(FEED.disabledUntil, max)
+                .where(FEED.disabledUntil.gt(max))
+                .execute();
+    }
+
     public Feed findByUrl(String normalizedUrl, String normalizedUrlHash) {
         return query()
                 .selectFrom(FEED)
