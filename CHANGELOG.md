@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fix `madnessfeed.feed-refresh.max-interval` (`MADNESSFEED_FEED_REFRESH_MAX_INTERVAL`) not applying to feeds already
+  scheduled with a previous, higher value: they kept waiting until that date. At startup, feeds scheduled further than
+  the maximum interval are now brought back within it.
 - Adaptive refresh (`madnessfeed.feed-refresh.interval-empirical`) now checks active feeds every quarter of their
   average time between entries instead of every half, still between `madnessfeed.feed-refresh.interval` and a quarter
   of `madnessfeed.feed-refresh.max-interval`.
