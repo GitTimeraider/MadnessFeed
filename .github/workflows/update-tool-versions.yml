@@ -37,7 +37,7 @@ jobs:
       # Same JDK as the ci workflow: the script runs Maven for the wrapper update and to check google-java-format
       # updates with the spotless plugin, and the runner's default JDK is too old for recent google-java-format.
       - name: Set up GraalVM
-        uses: graalvm/setup-graalvm@d6eca2595046623d69d636041513c80abf745406 # v1.6.9
+        uses: graalvm/setup-graalvm@60e76998d25690099182b796e99b8804da582d90 # v1.6.10
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: "graalvm"
