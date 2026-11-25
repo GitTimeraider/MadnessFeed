@@ -54,7 +54,6 @@ public class FeedRefreshWorker {
                             false,
                             feed.getLastModifiedHeader(),
                             feed.getEtagHeader(),
-                            feed.getLastPublishedDate(),
                             feed.getLastContentHash());
             // stops here if NotModifiedException or any other exception is thrown
 

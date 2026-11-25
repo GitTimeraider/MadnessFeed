@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fix new entries being ignored when a feed is refreshed: if the newest date of the feed did not change (new item with
+  an older publication date, feed not sorted by date, static channel date), the feed was treated as unchanged and the
+  new items were only picked up hours later, once a newer item appeared. Feeds are now compared on their content only.
 - Fix `madnessfeed.feed-refresh.max-interval` (`MADNESSFEED_FEED_REFRESH_MAX_INTERVAL`) not applying to feeds already
   scheduled with a previous, higher value: they kept waiting until that date. At startup, feeds scheduled further than
   the maximum interval are now brought back within it.
