@@ -59,7 +59,7 @@ class FeedFetcherTest {
 
         Mockito.when(urlProvider.get(htmlUrl, new String(html))).thenReturn(List.of(feedUrl));
 
-        FeedFetcherResult result = fetcher.fetch(htmlUrl, true, null, null, null, null);
+        FeedFetcherResult result = fetcher.fetch(htmlUrl, true, null, null, null);
         Assertions.assertEquals("title", result.feed().title());
     }
 
@@ -89,16 +89,37 @@ class FeedFetcherTest {
         NotModifiedException e =
                 Assertions.assertThrows(
                         NotModifiedException.class,
-                        () ->
-                                fetcher.fetch(
-                                        url,
-                                        false,
-                                        lastModified,
-                                        etag,
-                                        Instant.now(),
-                                        lastContentHash));
+                        () -> fetcher.fetch(url, false, lastModified, etag, lastContentHash));
 
         Assertions.assertEquals("last-modified-2", e.getNewLastModifiedHeader());
         Assertions.assertEquals("etag-2", e.getNewEtagHeader());
+    }
+
+    @Test
+    void returnsNewContentEvenWhenLastPublishedDateDidNotChange() throws Exception {
+        // a new item was added with a publication date older than the newest item, so the newest
+        // date of the feed is unchanged but the content is not
+        String url = "https://aaa.com";
+        byte[] content = "new content".getBytes();
+        String lastContentHash = Digests.sha1Hex("old content".getBytes());
+        Instant lastPublishedDate = Instant.parse("2026-11-25T10:00:00Z");
+
+        Mockito.when(getter.get(HttpGetter.HttpRequest.builder(url).build()))
+                .thenReturn(
+                        new HttpResult(
+                                content, "application/rss+xml", null, null, url, Duration.ZERO));
+        Mockito.when(parser.parse(url, content))
+                .thenReturn(
+                        new FeedParserResult(
+                                "title",
+                                "link",
+                                "iconUrl",
+                                lastPublishedDate,
+                                null,
+                                null,
+                                List.of()));
+
+        FeedFetcherResult result = fetcher.fetch(url, false, null, null, lastContentHash);
+        Assertions.assertEquals(Digests.sha1Hex(content), result.contentHash());
     }
 }

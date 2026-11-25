@@ -24,7 +24,6 @@ import org.apache.commons.lang3.Strings;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 
 /** Fetches a feed then parses it */
@@ -48,7 +47,6 @@ public class FeedFetcher {
             boolean extractFeedUrlFromHtml,
             String lastModified,
             String eTag,
-            Instant lastPublishedDate,
             String lastContentHash)
             throws FeedParsingException,
                     IOException,
@@ -109,14 +107,11 @@ public class FeedFetcher {
                     etagHeaderValueChanged ? result.eTag() : null);
         }
 
-        if (lastPublishedDate != null
-                && lastPublishedDate.equals(parserResult.lastPublishedDate())) {
-            log.debug("publishedDate not modified: {}", feedUrl);
-            throw new NotModifiedException(
-                    "publishedDate not modified",
-                    lastModifiedHeaderValueChanged ? result.lastModifiedSince() : null,
-                    etagHeaderValueChanged ? result.eTag() : null);
-        }
+        // Do not treat the feed as unchanged when only its newest date is unchanged: items are
+        // often added with a publication date older than the newest one (backdated articles, feeds
+        // not sorted by date, a static channel date), and they would be ignored until the newest
+        // date changes. The content hash above already detects unchanged feeds, and the updater
+        // skips entries that already exist.
 
         return new FeedFetcherResult(
                 parserResult,

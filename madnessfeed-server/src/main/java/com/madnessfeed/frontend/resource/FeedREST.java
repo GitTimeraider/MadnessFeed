@@ -277,8 +277,7 @@ public class FeedREST {
         url = StringUtils.trimToEmpty(url);
         url = prependHttp(url);
         try {
-            FeedFetcherResult feedFetcherResult =
-                    feedFetcher.fetch(url, true, null, null, null, null);
+            FeedFetcherResult feedFetcherResult = feedFetcher.fetch(url, true, null, null, null);
             info = new FeedInfo();
             info.setUrl(feedFetcherResult.urlAfterRedirect());
             info.setTitle(feedFetcherResult.feed().title());
